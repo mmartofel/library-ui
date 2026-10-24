@@ -1,0 +1,143 @@
+{
+  "skipToContent": "Skip to content",
+  "nav": {
+    "label": "Main navigation",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
+  },
+  "language": {
+    "label": "Language",
+    "pl": "Polski",
+    "en": "English",
+    "trigger": "{{code}} – language: {{name}}"
+  },
+  "theme": {
+    "label": "Theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  "user": {
+    "menu": "User menu",
+    "roles": "Roles",
+    "noRoles": "No application roles",
+    "logout": "Log out",
+    "menuWithName": "{{name}} – user menu"
+  },
+  "auth": {
+    "signingIn": "Signing in…",
+    "errorTitle": "Sign-in failed",
+    "errorText": "We could not sign you in. Please try again.",
+    "signInAgain": "Sign in again"
+  },
+  "errors": {
+    "forbiddenTitle": "Access denied",
+    "forbiddenText": "You do not have permission to view this page.",
+    "notFoundTitle": "Page not found",
+    "notFoundText": "The page you are looking for does not exist or has been moved.",
+    "unexpectedTitle": "Something went wrong",
+    "unexpectedText": "An unexpected error occurred. Try again, and if the problem persists, reload the page.",
+    "backHome": "Back to start",
+    "tryAgain": "Try again",
+    "reload": "Reload page"
+  },
+  "states": {
+    "loading": "Loading…",
+    "empty": "Nothing here yet.",
+    "errorTitle": "Could not load data",
+    "errorText": "The server did not respond as expected.",
+    "retry": "Retry"
+  },
+  "actions": {
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "new": "New",
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
+    "saving": "Saving…",
+    "back": "Back",
+    "backToList": "Back to list"
+  },
+  "validation": {
+    "required": "This field is required.",
+    "tooShort": "Enter at least {{minimum}} characters.",
+    "tooLong": "Enter at most {{maximum}} characters.",
+    "min": "Enter a value of at least {{minimum}}.",
+    "max": "Enter a value of at most {{maximum}}.",
+    "email": "Enter a valid email address.",
+    "date": "Enter a valid date.",
+    "option": "Choose one of the available options.",
+    "past": "Enter a date in the past.",
+    "unique": "This value is already in use.",
+    "invalid": "This value is not valid.",
+    "date-range": "The end date cannot be earlier than the start date.",
+    "not-found": "The selected record does not exist.",
+    "in-use": "It is still used by other records.",
+    "step": "Enter a multiple of {{step}}."
+  },
+  "notifications": "Notifications",
+  "documentTitle": "{{page}} – {{app}}",
+  "roles": {},
+  "list": {
+    "search": "Search",
+    "searchPlaceholder": "Search…",
+    "clearSearch": "Clear search",
+    "range": "{{from}}–{{to}} of {{total}}",
+    "rowsPerPage": "Rows per page",
+    "previous": "Previous page",
+    "next": "Next page",
+    "sortedAsc": "sorted ascending",
+    "sortedDesc": "sorted descending",
+    "noResults": "No results for “{{q}}”.",
+    "pagination": "Pagination",
+    "filters": "Filters",
+    "filtersActive": "{{count}} active",
+    "clearFilters": "Clear filters",
+    "noFilterResults": "No records match the filters.",
+    "filterAny": "Any",
+    "closeFilters": "Close filters"
+  },
+  "form": {
+    "required": "required",
+    "none": "— none —",
+    "errorTitle": "The record could not be saved",
+    "unsavedTitle": "Leave without saving?",
+    "unsavedText": "Your changes will be lost.",
+    "leave": "Leave",
+    "stay": "Stay",
+    "staleTitle": "This record was changed",
+    "staleText": "Someone else saved a newer version while you were editing. Reload it to see the latest data; your changes will be lost.",
+    "reload": "Reload",
+    "chooseCountry": "Choose a country",
+    "searchCountry": "Search countries…",
+    "noCountry": "No country found.",
+    "countries": "Countries",
+    "chooseRecord": "Choose…",
+    "searchRecords": "Search…",
+    "noRecords": "Nothing found.",
+    "loadingRecords": "Loading…",
+    "unknownRecord": "Unknown record"
+  },
+  "toast": {
+    "created": "{{name}} was created.",
+    "updated": "{{name}} was saved.",
+    "deleted": "{{name}} was deleted.",
+    "deleteFailed": "{{name}} could not be deleted.",
+    "deleteInUse": "{{name}} is still used by other records and was not deleted."
+  },
+  "delete": {
+    "title": "Delete {{name}}?",
+    "text": "This cannot be undone."
+  },
+  "detail": {
+    "empty": "Not provided",
+    "related": "{{title}} ({{count}})",
+    "showAll": "Show all",
+    "noRelated": "None yet."
+  },
+  "home": {
+    "emptyTitle": "No resources yet",
+    "emptyText": "This app has no screens yet. Add a resource to <code>ui-manifest.yaml</code> with the <code>crud-resource</code> skill, or start with <code>crud-ui-init</code>."
+  }
+}

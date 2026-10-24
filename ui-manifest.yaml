@@ -1,0 +1,14 @@
+# UI decisions per resource. The API contract says WHAT the data is;
+# this file says HOW the UI shows it. Labels are not here: they live in src/locales/<lang>/
+# under <resource>.fields.<field> and enums.<EnumName>.<VALUE>; `enum:` names the <EnumName>.
+# Every key is shown in the reference entries in .claude/skills/crud-resource/references/examples/*/manifest.yaml.
+
+app:
+  # Shown in the header, the browser tab (<title>) and every page title.
+  name: CRUD UI
+  # Languages offered by the switcher; the first one is the default and the fallback.
+  # Each needs src/locales/<lang>/ and a line in src/i18n/resources.ts.
+  languages: [pl, en]
+
+# One entry per resource, added by the crud-resource skill (crud-ui-init drafts them all for a new project).
+resources: {}

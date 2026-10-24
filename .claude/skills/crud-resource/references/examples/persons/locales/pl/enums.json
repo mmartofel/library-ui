@@ -1,0 +1,11 @@
+{
+  "Gender": {
+    "MALE": "Mężczyzna",
+    "FEMALE": "Kobieta",
+    "OTHER": "Inna"
+  },
+  "PersonStatus": {
+    "AVAILABLE": "Dostępna",
+    "UNAVAILABLE": "Niedostępna"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "Gender": {
+    "MALE": "Male",
+    "FEMALE": "Female",
+    "OTHER": "Other"
+  },
+  "PersonStatus": {
+    "AVAILABLE": "Available",
+    "UNAVAILABLE": "Unavailable"
+  },
+  "Priority": {
+    "LOW": "Low",
+    "MEDIUM": "Medium",
+    "HIGH": "High"
+  },
+  "TaskState": {
+    "false": "Open",
+    "true": "Done"
+  }
+}

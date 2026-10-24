@@ -1,0 +1,30 @@
+{
+  "title": "Persons",
+  "newTitle": "New person",
+  "editTitle": "Edit {{name}}",
+  "empty": "No persons yet.",
+  "fields": {
+    "firstName": "First name",
+    "lastName": "Last name",
+    "email": "Email",
+    "birthDate": "Date of birth",
+    "gender": "Gender",
+    "status": "Status",
+    "availableFrom": "Available from",
+    "availableTo": "Available to",
+    "address": {
+      "street": "Street",
+      "postalCode": "Postal code",
+      "city": "City",
+      "countryCode": "Country"
+    }
+  },
+  "groups": {
+    "address": "Address"
+  },
+  "filters": {
+    "status": "Status",
+    "availableOn": "Available on",
+    "countryCode": "Country"
+  }
+}

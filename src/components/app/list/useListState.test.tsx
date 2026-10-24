@@ -1,0 +1,47 @@
+import { act, renderHook } from '@testing-library/react'
+import type { ReactNode } from 'react'
+import { createMemoryRouter, RouterProvider } from 'react-router'
+import { useListState } from './listState'
+import { fixtureResource } from '@/test/fixtures'
+
+const persons = fixtureResource('persons')
+
+function setup(url: string) {
+  let router: ReturnType<typeof createMemoryRouter> | undefined
+  const wrapper = ({ children }: { children: ReactNode }) => {
+    router ??= createMemoryRouter([{ path: '/persons', element: children }], { initialEntries: [url] })
+    return <RouterProvider router={router} />
+  }
+  const hook = renderHook(() => useListState(persons), { wrapper })
+  // Param order is not part of the contract; compare as a map.
+  return { hook, search: () => Object.fromEntries(new URLSearchParams(router!.state.location.search)) }
+}
+
+describe('useListState', () => {
+  it('resets to the first page when the search, sort or page size changes', () => {
+    const { hook, search } = setup('/persons?page=3')
+    act(() => hook.result.current.setQuery(' nowak '))
+    expect(search()).toEqual({ q: 'nowak' })
+
+    act(() => hook.result.current.setPage(2))
+    act(() => hook.result.current.setSort({ field: 'email', direction: 'desc' }))
+    expect(search()).toEqual({ sort: 'email,desc', q: 'nowak' })
+
+    act(() => hook.result.current.setPage(1))
+    act(() => hook.result.current.setSize(50))
+    expect(search()).toEqual({ size: '50', sort: 'email,desc', q: 'nowak' })
+  })
+
+  it('sets filters one by one, resets the page and clears them all', () => {
+    const { hook, search } = setup('/persons?page=2&q=jan')
+    act(() => hook.result.current.setFilter('status', 'AVAILABLE'))
+    act(() => hook.result.current.setFilter('countryCode', 'PL'))
+    expect(search()).toEqual({ q: 'jan', status: 'AVAILABLE', countryCode: 'PL' })
+
+    act(() => hook.result.current.setFilter('status', ''))
+    expect(search()).toEqual({ q: 'jan', countryCode: 'PL' })
+
+    act(() => hook.result.current.clearFilters())
+    expect(search()).toEqual({ q: 'jan' })
+  })
+})

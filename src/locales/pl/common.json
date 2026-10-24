@@ -1,0 +1,143 @@
+{
+  "skipToContent": "Przejdź do treści",
+  "nav": {
+    "label": "Nawigacja główna",
+    "openMenu": "Otwórz menu",
+    "closeMenu": "Zamknij menu"
+  },
+  "language": {
+    "label": "Język",
+    "pl": "Polski",
+    "en": "English",
+    "trigger": "{{code}} – język: {{name}}"
+  },
+  "theme": {
+    "label": "Motyw",
+    "light": "Jasny",
+    "dark": "Ciemny",
+    "system": "Systemowy"
+  },
+  "user": {
+    "menu": "Menu użytkownika",
+    "roles": "Role",
+    "noRoles": "Brak ról aplikacji",
+    "logout": "Wyloguj",
+    "menuWithName": "{{name}} – menu użytkownika"
+  },
+  "auth": {
+    "signingIn": "Logowanie…",
+    "errorTitle": "Logowanie nie powiodło się",
+    "errorText": "Nie udało się Cię zalogować. Spróbuj ponownie.",
+    "signInAgain": "Zaloguj ponownie"
+  },
+  "errors": {
+    "forbiddenTitle": "Brak dostępu",
+    "forbiddenText": "Nie masz uprawnień do tej strony.",
+    "notFoundTitle": "Nie znaleziono strony",
+    "notFoundText": "Strona, której szukasz, nie istnieje lub została przeniesiona.",
+    "unexpectedTitle": "Coś poszło nie tak",
+    "unexpectedText": "Wystąpił nieoczekiwany błąd. Spróbuj ponownie, a jeśli problem się powtarza, odśwież stronę.",
+    "backHome": "Wróć na start",
+    "tryAgain": "Spróbuj ponownie",
+    "reload": "Odśwież stronę"
+  },
+  "states": {
+    "loading": "Ładowanie…",
+    "empty": "Nic tu jeszcze nie ma.",
+    "errorTitle": "Nie udało się wczytać danych",
+    "errorText": "Serwer nie odpowiedział zgodnie z oczekiwaniami.",
+    "retry": "Ponów"
+  },
+  "actions": {
+    "cancel": "Anuluj",
+    "confirm": "Potwierdź",
+    "new": "Dodaj",
+    "edit": "Edytuj",
+    "delete": "Usuń",
+    "save": "Zapisz",
+    "saving": "Zapisywanie…",
+    "back": "Wstecz",
+    "backToList": "Wróć do listy"
+  },
+  "validation": {
+    "required": "To pole jest wymagane.",
+    "tooShort": "Minimalna liczba znaków: {{minimum}}.",
+    "tooLong": "Maksymalna liczba znaków: {{maximum}}.",
+    "min": "Podaj wartość nie mniejszą niż {{minimum}}.",
+    "max": "Podaj wartość nie większą niż {{maximum}}.",
+    "email": "Podaj poprawny adres e-mail.",
+    "date": "Podaj poprawną datę.",
+    "option": "Wybierz jedną z dostępnych opcji.",
+    "past": "Podaj datę z przeszłości.",
+    "unique": "Ta wartość jest już zajęta.",
+    "invalid": "Ta wartość jest niepoprawna.",
+    "date-range": "Data końcowa nie może być wcześniejsza niż początkowa.",
+    "not-found": "Wybrany rekord nie istnieje.",
+    "in-use": "Rekord jest nadal używany przez inne rekordy.",
+    "step": "Podaj wielokrotność liczby {{step}}."
+  },
+  "notifications": "Powiadomienia",
+  "documentTitle": "{{page}} – {{app}}",
+  "roles": {},
+  "list": {
+    "search": "Szukaj",
+    "searchPlaceholder": "Szukaj…",
+    "clearSearch": "Wyczyść wyszukiwanie",
+    "range": "{{from}}–{{to}} z {{total}}",
+    "rowsPerPage": "Wierszy na stronę",
+    "previous": "Poprzednia strona",
+    "next": "Następna strona",
+    "sortedAsc": "sortowanie rosnąco",
+    "sortedDesc": "sortowanie malejąco",
+    "noResults": "Brak wyników dla „{{q}}”.",
+    "pagination": "Stronicowanie",
+    "filters": "Filtry",
+    "filtersActive": "aktywne: {{count}}",
+    "clearFilters": "Wyczyść filtry",
+    "noFilterResults": "Brak rekordów spełniających filtry.",
+    "filterAny": "Dowolny",
+    "closeFilters": "Zamknij filtry"
+  },
+  "form": {
+    "required": "wymagane",
+    "none": "— brak —",
+    "errorTitle": "Nie udało się zapisać rekordu",
+    "unsavedTitle": "Wyjść bez zapisywania?",
+    "unsavedText": "Twoje zmiany zostaną utracone.",
+    "leave": "Wyjdź",
+    "stay": "Zostań",
+    "staleTitle": "Ten rekord został zmieniony",
+    "staleText": "Ktoś inny zapisał nowszą wersję podczas Twojej edycji. Wczytaj ją ponownie, aby zobaczyć aktualne dane; Twoje zmiany zostaną utracone.",
+    "reload": "Wczytaj ponownie",
+    "chooseCountry": "Wybierz kraj",
+    "searchCountry": "Szukaj kraju…",
+    "noCountry": "Nie znaleziono kraju.",
+    "countries": "Kraje",
+    "chooseRecord": "Wybierz…",
+    "searchRecords": "Szukaj…",
+    "noRecords": "Nic nie znaleziono.",
+    "loadingRecords": "Wczytywanie…",
+    "unknownRecord": "Nieznany rekord"
+  },
+  "toast": {
+    "created": "Utworzono: {{name}}.",
+    "updated": "Zapisano: {{name}}.",
+    "deleted": "Usunięto: {{name}}.",
+    "deleteFailed": "Nie udało się usunąć: {{name}}.",
+    "deleteInUse": "Nie usunięto: {{name}}. Rekord jest nadal używany przez inne rekordy."
+  },
+  "delete": {
+    "title": "Usunąć: {{name}}?",
+    "text": "Tej operacji nie można cofnąć."
+  },
+  "detail": {
+    "empty": "Nie podano",
+    "related": "{{title}} ({{count}})",
+    "showAll": "Pokaż wszystkie",
+    "noRelated": "Jeszcze brak."
+  },
+  "home": {
+    "emptyTitle": "Brak zasobów",
+    "emptyText": "Ta aplikacja nie ma jeszcze ekranów. Dodaj zasób do <code>ui-manifest.yaml</code> skillem <code>crud-resource</code> albo zacznij od <code>crud-ui-init</code>."
+  }
+}

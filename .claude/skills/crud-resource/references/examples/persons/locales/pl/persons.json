@@ -1,0 +1,30 @@
+{
+  "title": "Osoby",
+  "newTitle": "Nowa osoba",
+  "editTitle": "Edycja: {{name}}",
+  "empty": "Nie ma jeszcze żadnych osób.",
+  "fields": {
+    "firstName": "Imię",
+    "lastName": "Nazwisko",
+    "email": "E-mail",
+    "birthDate": "Data urodzenia",
+    "gender": "Płeć",
+    "status": "Status",
+    "availableFrom": "Dostępność od",
+    "availableTo": "Dostępność do",
+    "address": {
+      "street": "Ulica",
+      "postalCode": "Kod pocztowy",
+      "city": "Miasto",
+      "countryCode": "Kraj"
+    }
+  },
+  "groups": {
+    "address": "Adres"
+  },
+  "filters": {
+    "status": "Status",
+    "availableOn": "Dostępność w dniu",
+    "countryCode": "Kraj"
+  }
+}

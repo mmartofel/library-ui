@@ -1,0 +1,11 @@
+{
+  "Priority": {
+    "LOW": "Niski",
+    "MEDIUM": "Średni",
+    "HIGH": "Wysoki"
+  },
+  "TaskState": {
+    "false": "Otwarte",
+    "true": "Wykonane"
+  }
+}

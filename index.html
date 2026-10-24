@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>%APP_NAME%</title>
+    <script>
+      // Apply the stored theme and language before the first paint
+      // (same rules as src/components/app/theme and src/i18n/index.ts; languages from ui-manifest.yaml app.languages).
+      try {
+        var langs = %APP_LANGUAGES%
+        var t = localStorage.getItem('theme')
+        if (t === 'dark' || (t !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches))
+          document.documentElement.classList.add('dark')
+        var l = localStorage.getItem('lang')
+        if (langs.indexOf(l) < 0) {
+          l = (navigator.languages || []).map(function (x) { return x.slice(0, 2).toLowerCase() })
+            .filter(function (x) { return langs.indexOf(x) >= 0 })[0] || langs[0]
+        }
+        document.documentElement.lang = l
+      } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

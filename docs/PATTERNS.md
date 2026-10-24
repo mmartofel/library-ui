@@ -1,0 +1,244 @@
+# Patterns
+
+How the method was built and what was learned. This template was extracted from **Person UI**
+(`spring-person-ui-claude`, against `spring-person-api-claude`, Person API 3.4.1): its two resources are now the
+reference examples in `.claude/skills/crud-resource/references/examples/` (`persons`, `tasks`). Copy them, do not
+reinvent them. Conventions are in `CLAUDE.md`.
+
+Sections 2 and 3 are that app's history: paths such as `src/features/persons/` and stage numbers refer to it. Add
+your project's lessons to section 3 and keep section 4 (what the manifest can express) current.
+
+## 1. Adding a resource
+
+The `crud-resource` skill (`.claude/skills/crud-resource/`) runs these steps; keep it in step with this section.
+Contract rules are in `docs/API-CONTRACT.md`, checked by the `contract-auditor` agent.
+
+Example: a resource `orders` with API tag `Orders`. Steps 1–3 come before any screen code.
+
+1. **Contract.** The API must already expose the resource. `npm run contract:pull && npm run api:generate`, then commit
+   `contract/openapi.json` and `src/api/generated/`. Check what the contract gives you:
+   - required fields;
+   - enums;
+   - `format: date`;
+   - field error `code`s.
+   Anything the UI needs but cannot find there (e.g. a server-only rule like `@Past`) is an API change, not a UI
+   workaround.
+2. **Manifest** (`ui-manifest.yaml`). Add `resources.orders` with the same keys as `references/examples/persons/manifest.yaml`:
+   - `route`, `nav` (`icon`, `order`) and `display`;
+   - `permissions` (`read`, `write`);
+   - `list`: `defaultSort`, `pageSize`, `pageSizes`, `columns` (`field` or a dot path such as `address.city`,
+     `sortable`, `format: date | enum | badge`, `enum`, `badge` and `mobile: subtitle`) and `filters` (`param`,
+     `input: select | date | country`, `enum`). The first column is the table's link to the detail page; put the most
+     identifying field first, then the most important ones: from 768 px the table scrolls inside its frame when it is
+     wider than the screen, and later columns are the ones that go out of view (an edge fade shows they exist);
+   - `detail.fields` (a nested object is one labelled block) and `detail.related` (`resource`, `filter`, `limit`: records
+     of another resource that point to this one);
+   - `form`: `groups` (rows, or `{ object, groups }` for a nested object's fieldset), `fields` (`input: text | textarea |
+     number | date | select | checkbox | country | relation`, `enum`, `allowEmpty`, `notBefore`, and for a relation
+     `resource` + `from`; nested fields keyed by their path) and `readOnly` (server-set fields under the edit form);
+   - `formats` (`date | dateTime | number`) for fields that are neither columns nor inputs (e.g. `createdAt`);
+   - columns and filters can be relations: `format: relation, resource: <key>` / `input: relation, resource: <key>`;
+     a boolean filter is `input: boolean` with an `enum` for its two labels (`enums.<Enum>.true/false`).
+   - Defaults for new records need no manifest key: they come from the contract's `default` through the generated Zod
+     schema.
+
+   Then:
+   - add `'orders'` to `ResourceKey` in `src/manifest/index.ts`;
+   - add one line to `src/api/sources.ts` (`list`, `get`, `listKey` from the generated client) so other resources
+     can relate to it;
+   - add any new `nav.icon` name to `src/manifest/icons.ts`.
+
+   Ask when a decision is missing; do not guess.
+3. **i18n.**
+   - Create `src/locales/{pl,en}/orders.json` with `title`, `newTitle`, `editTitle` (`{{name}}`), `empty`,
+     `fields.<field>` (nested: `fields.<object>.<field>`), `groups.<object>` and `filters.<param>`.
+   - Add new enums to `src/locales/{pl,en}/enums.json` as `<EnumName>.<VALUE>`.
+   - Register the namespaces in `src/i18n/resources.ts`.
+
+   `src/i18n/locales.test.ts` fails if a label the manifest needs, an enum, or a PL/EN key is missing.
+4. **Feature folder.** Copy `.claude/skills/crud-resource/references/examples/persons/feature/` to `src/features/orders/`, then rename:
+   - the generated hooks (`useListOrders`, `useGetOrder`, `useCreateOrder`, `useUpdateOrder`, `useDeleteOrder`);
+   - the query key getters (`getListOrdersQueryKey`, `getGetOrderQueryKey`);
+   - the Zod bodies (`CreateOrderBody`, `UpdateOrderBody`);
+   - the enum consts used for `enumValues`;
+   - `getResource('orders')`.
+
+   | File | What it wires |
+   |---|---|
+   | `routes.tsx` | lazy routes; `RequireRole` with `permissions.read` around everything, `permissions.write` around `new` and `:id/edit` |
+   | `PersonsListPage.tsx` | `useListState(resource, List<Resource>sQueryParams)` → generated list hook (`keepPreviousData`) → `SearchInput`, `ListFilters` (with `enumValues` for select filters), `DataTable`, `Pagination` inside `DataState` (the empty state with filters offers "Clear filters"); `clampPage` effect; New button if `canWrite` |
+   | `PersonDetailPage.tsx` | `useIdParam` (bad id → 404), `errorPageFor` (403/404), `DetailList`, Edit/Delete if `canWrite`, `ConfirmDialog` naming the record, cache update and toast, a 404 on delete counts as success |
+   | `PersonFormPage.tsx` | create and edit pages around `ResourceForm`; edit uses `UpdateBody.omit({ version: true })` and sends `version` from `ResourceForm` |
+5. **Router.** Spread `ordersRoutes` into the root children in `src/router.tsx`, before the `*` route.
+6. **Tests.** Copy the relevant cases from `references/examples/persons/persons.spec.ts`:
+   - use `test.use({ storageState: authFile('writer') })` and `openAs`;
+   - create data through the API with a unique tag;
+   - cleanup runs in `afterEach`.
+
+   Add unit tests only for new generic code.
+7. **Definition of Done** (`CLAUDE.md`):
+   - checks;
+   - Playwright MCP at 375/768/1440 px, writer and reader, every language of `app.languages`;
+   - the `ui-reviewer` agent;
+   - e2e;
+   - README.
+
+### Shared pieces (use, do not copy)
+
+| Need | Use |
+|---|---|
+| Page title + actions | `components/app/PageHeader` (also sets `document.title`) |
+| Loading / empty / error with retry | `components/app/DataState`, `list/ListSkeleton` |
+| 403/404 from a query error | `components/app/errorPageFor` |
+| URL list state, back-to-list link | `list/listState` (`useListState`, `useListHref`) |
+| Search, filters, table/cards, paging | `list/SearchInput`, `list/ListFilters`, `list/DataTable`, `list/Pagination` |
+| Detail fields | `components/app/DetailList` (formatting via `formatValue`: `formatFieldValue` text, `renderFieldValue` with badges) |
+| Country picker | `components/app/CountrySelect` (codes in `lib/countries`, names from `Intl.DisplayNames`) |
+| Relation picker, related records | `components/app/RelationSelect`, `components/app/RelatedList` (`RelatedLists`), both via `api/sources` |
+| Delete failure toast (`in-use`) | `toastDeleteError` from `components/app/deleteError` |
+| Nested values | `getPath`, `objectFields`, `formFieldPaths` from `@/manifest` |
+| Form | `form/ResourceForm` (fields, resolver, server errors, stale reload, unsaved guard, toasts) |
+| Delete confirmation | `components/app/ConfirmDialog` |
+| Roles | `useRoles` from `@/auth`, `canRead`/`canWrite` from `@/manifest` |
+| Record name | `formatDisplay(resource.display, record)` |
+| Labels built at runtime | `tDynamic`, `fieldLabelKey`, `enumLabelKey`, `groupLabelKey`, `filterLabelKey` from `@/i18n/dynamic` |
+| Route id | `useIdParam` from `@/lib/ids` |
+
+## 2. Persons-specific code, and why it exists
+
+Everything else is generic and driven by the manifest. These are the only persons-specific parts:
+
+- **`src/features/persons/*`** (356 lines; 314 before step 9a, which added the filter wiring and the `in-use` toast,
+  and the related tasks card in 9b).
+- **`src/features/tasks/*`** (353 lines, step 9b): a rename of the persons folder. Only **4 lines** differ beyond the
+  rename: the imports and values of `enumValues` and `filterValues`. The other 9b work (number, textarea, checkbox,
+  read-only fields, defaults, relations, boolean and relation filters, related lists) went into generic code.
+- **Skill fixes** (bullets changed in `SKILL.md` + `references/wiring.md`, listed in each commit): 9a **9** (4 + 5),
+  9b **8** (3 + 5). None was a wrong step; all were missing ones: registrations (`sources.ts`), new shared pieces to
+  point to, a rename that works on macOS, and test helpers. The screens themselves needed no task-specific code
+  beyond the 4 lines above, so the method repeats; the skill still grows with each new capability. Generated hooks and schemas have resource-specific names, and orval's
+  types differ per resource, so a page cannot pick them up from the manifest without losing type safety. The pages
+  only wire those hooks to shared components.
+  - An `api:` block with operationIds was meant to make this generic. Nothing read it, so it was removed (section 4).
+- **`useOnSaved` and the delete handler.** Cache updates need the generated query key getters, which have
+  per-resource names.
+- **`enumValues`** (`{ gender: Object.values(PersonCreateRequestGender), status: … }`) and the list's `filterValues`
+  (`{ status: Object.values(ListPersonsStatus) }`). Allowed enum values live in the generated model, not the manifest.
+  The manifest only names the i18n enum (`enum: Gender`).
+- **`ListPersonsQueryParams`** passed to `useListState`: it validates filter values from the URL against the contract.
+- **`UpdatePersonBody.omit({ version: true })`.** The form never shows `version`; `ResourceForm` keeps it and passes it
+  to `save`.
+- **Registration.**
+  - `ResourceKey` (`src/manifest/index.ts`): keeps `getResource` typed;
+  - `src/i18n/resources.ts`: JSON imports are static;
+  - `src/router.tsx`: lazy routes per feature.
+- **Locale files** `persons.json` and the `Gender` enum labels.
+
+## 3. Problems met and how they were solved
+
+| Stage | Problem | Fix |
+|---|---|---|
+| 1 | `@hookform/resolvers@6` failed `npm install` (ERESOLVE on optional `effect` peers) | pinned `@hookform/resolvers@5.9.2`, which supports Zod 4 |
+| 1 | TS 6 deprecates `baseUrl` | `paths` without `baseUrl` |
+| 2 | The generated Zod schema had a Java-only regex `(?s)` from `@Pattern`, which crashed at import | fixed in the API (contract 3.0.0); `src/api/contract.test.ts` imports the schemas so CI catches it |
+| 2 | The contract at first had optional response fields, `*/*` responses and a partial PUT | API Stage 0 (3.0.0): required fields, `application/json`, PUT replaces the record and sends `version` |
+| 3 | Without `.env.local` the app hung on login | `requireEnv` names the missing `VITE_OIDC_*` variable; login errors render the error page |
+| 3 | After login the original query string was lost (router transition race on the callback URL) | `RequireAuth` renders nothing while the URL still has `code`/`error` + `state` |
+| 3 | "Sign in again" after a failed callback looped | `returnToFromLocation` strips OIDC callback params |
+| 3 | ESLint `react-hooks/refs` flagged RHF `field` objects and a ref read in render | destructure `useController` fields; capture focus in `onOpenAutoFocus` |
+| 4 | `useBlocker` needs a data router | switched to `createBrowserRouter`; `AuthProvider` gets `router.navigate` |
+| 4 | Server field errors could not take focus while inputs were disabled during submit | only the submit button is disabled |
+| 4 | **Lost update:** a background refetch (window focus) moved `version` under an open form, so a conflicting save succeeded | `ResourceForm` captures `version` once and changes it only on Reload; e2e fires `visibilitychange` before saving |
+| 4 | An old link to `page=2` showed "no records" | `clampPage` moves to the last page; the deep-link e2e uses sort + search instead of a page number |
+| 4 | Failed e2e runs left test data | `afterEach` deletes through the API with the session token, even after a failure |
+| 4 | Mobile cards read "Smith John" (two `primary` columns) while titles used `display` | cards use `display` (user decision) |
+| 4→3.1 | Server field messages were hard-coded English | API 3.1 adds `errors[].code`; the UI shows `common.validation.<code>` and re-translates it on a language switch |
+| 3.1 | Reviewer: a field error without `code` was dropped, so a duplicate-email 409 looked like a stale version | the fetcher keeps it with code `invalid` |
+| 5 | Playwright `storageState` does not save `sessionStorage`, where the OIDC user lives | save the Keycloak SSO cookie instead; `openAs` lets Keycloak redirect back without the form. Logout tests use their own fresh login so they never end the shared session |
+| any | The Playwright MCP tab sometimes ignored clicks | open a fresh tab (harness glitch, not an app bug) |
+| 9a | Zod 4 skips `.refine`/`.superRefine` on an object when a field already has an issue, so a cross-field error showed only after the other fields were fixed | `formResolver` adds each `notBefore` rule with `refine(..., { when: () => true })` |
+| 9a | `FieldError.field` became optional (`in-use` has no field) | `applyApiError` sends errors without a field to the form alert; the delete toast explains `in-use` |
+| 9a | An e2e assertion `getByText('Not provided')` broke once more fields could be empty | assert next to the field's label (`dt` → `dd`), not on a text that many fields share |
+| 9a | The shadcn Sheet's default close button has no accessible name and a 16 px target | `showCloseButton={false}` plus a labelled icon `Button` in `SheetHeader`, as in `AppShell` |
+| 9a | Six columns with a long email do not fit at 768 px, even with cells capped at 14rem | the table scrolls inside its own frame (`overflow-x-auto` in `ui/table`); the page never scrolls sideways (user decision) |
+| 9a | The reviewer found the scroll undiscoverable at every width below 1440 px: macOS hides scrollbars and Status, City and Date of birth were silently off-screen | user chose: Status moved before Email in the manifest (the important columns go first), and `DataTable` fades the edge that has more columns (`useHorizontalOverflow`, `ScrollHint`); truncating cells was rejected |
+| 9a | `getByRole('link', { name: 'New' })` matched a mobile card of a "Newer …" person made by a parallel test | exact names for short button and link labels (`exact: true`) |
+| 9b | `fetcher.ts` dropped API errors without `field`, so `in-use` arrived as a 409 with no errors: the generic delete toast, and in a form the stale-version dialog | `field` is optional (absent or `null`) in `isFieldError`; unit test with `field: null` |
+| 9b | Zod 4 fills `_zod.bag` lazily, so number limits read from it were empty | `numberLimits` reads `minValue`/`maxValue` and the `multiple_of` check |
+| 9b | cmdk names its option list "Suggestions" (English) even with a `label` on `Command` | pass `label` to `CommandList` too (the 9a fix was incomplete) |
+| 9b | BSD `sed` (macOS) has no `\b`, so the rename of the copied feature folder silently skipped most names | rename with a word-boundary-aware script (wiring.md), then grep the new folder for the old names |
+| 9b | Shared Polish labels must fit every resource: "Nowy" agreed with "osoba" but not with "zadanie" | `common.*` labels in PL are gender-neutral ("Dodaj"); messages with `{{name}}` avoid gendered verbs |
+| 9b | Tests deleting a person before its task failed cleanup (409 `in-use`) | e2e cleanup deletes newest first; API helpers moved to `e2e/support/data.ts` |
+| 9b | Reviewer: Enter after a search in the relation picker picked nothing, or "none" from the previous list (cmdk keeps the old highlight while the debounced search is pending) | `RelationSelect` controls the highlight: none while the search is pending, then the first result |
+| 9b | Reviewer: a field-less server error showed its English `message`, and a 5xx showed "Internal Server Error" in the form | whole-record errors are translated from their code; status ≥ 500 shows `common.errors.unexpectedText` |
+| 9b | Reviewer: validation limits read "0.5" in Polish, and a step violation fell back to "not valid" | the Zod error map formats limits with `Intl` and has `common.validation.step` (`not_multiple_of`) |
+| 9b | Reviewer: a long free-text title in the link column pushed every other column out of view | the link column wraps (`min-w-48 max-w-96`) |
+| 9b | An API bug found by the UI review: the fix had to come from the API repo, but the UI still had to follow it | flow in CLAUDE.md "API contract": reproduce, prompt for the API repo, `test.fixme`; after the fix pull + regenerate (version-only), regression test |
+| 9b | **API bug:** `PUT /api/tasks/{id}` with a new `assigneeId` committed and then answered 500 (lazy `assignee` read after the transaction, `open-in-view: false`), so the next save met the stale-version dialog | fixed in the API repo (3.4.1, which also returns Problem Details for unexpected errors); the UI only regenerated the client. The e2e test changes the assignee and saves again |
+
+`tasks/lessons.md` has no entries: there were no user corrections. The decisions the user made are in the table
+above and in the git log.
+
+Known gaps, left as is:
+- **Template (step 10 review):** buttons are 44px below `md` and 36px from `md`, so at 768-1023 px (sheet menu, touch
+  devices) the header buttons are 36px. It meets the written rule ("touch targets on mobile"); kept as a decision.
+- **Open from the step 9a review (user: "commit as is"):**
+  - the mobile filter sheet applies filters live and closes only with its X; no "Show results" button;
+  - native date inputs (`availableOn`, the form dates) show the browser's date format, not the app language;
+  - with both a search term and a filter set, the empty state shows only the filters message;
+  - after a delete on the detail page, one extra `GET` of the deleted record returns 404 (probably older than 9a);
+  - the delete dialog once did not open on the first click right after a re-login (not reproduced; most likely the
+    Playwright MCP browser without OS focus, where Radix closes menus and dialogs at once: `page.bringToFront()`);
+  - the e2e test "a birth date in the future…" failed once under parallel load and passed in every later run;
+  - the `status` column sorts by enum code, like `gender`;
+- **Open from the step 9b review:**
+  - `tasks.fields.done` reads "Done: Open" in the list and detail; a separate list/detail label ("State") would need a
+    manifest key for per-view labels;
+  - the `in-use` toast says "used by other records" without naming the related resource (the API sends no resource);
+  - the related list puts the title and badges in one wrapping row, unlike the list's cards;
+  - a relation link in the detail is an inline text link (19 px tall at 375 px; allowed by WCAG for inline links);
+- the gender column sorts by enum code, not by label (API behaviour; the user kept it sortable);
+- user-menu labels are not read by screen readers;
+- a server `past` error is cleared by a client-side re-validation until the next save;
+- the API reports birth-date errors before duplicate-email errors, so the user sees them one save at a time.
+
+## 4. `ui-manifest.yaml`: what was missing, what is unused
+
+**Added in step 9b (Tasks):**
+- Inputs `textarea`, `number` (min/max/step from the generated schema), `checkbox` and `relation` (`resource`, `from`);
+  `form.readOnly`; `formats`; `format: relation` columns; `boolean` and `relation` filters; `detail.related`.
+- `src/api/sources.ts`: one registration line per resource, so generic code can list and get another resource.
+
+**Added in step 9a (Person changes):**
+- Dot paths in `columns[].field` and `form.fields` keys (`address.city`), `{ object, groups }` fieldsets in `form.groups`;
+  a nested field in `detail.fields` is one labelled block.
+- `format: badge` with `badge: { VALUE: <shadcn Badge variant> }` on a column; it applies wherever the field is shown.
+- `input: country` (form and filter) and the matching `country` format.
+- `notBefore: <field>` on a form field: a client `date-range` rule plus the native `min`.
+- `list.filters` (`param`, `input`, `enum`).
+
+**Added during the build:**
+- `enum: <EnumName>` on enum columns and form fields. Field labels can be derived from the field name; enum labels
+  cannot.
+- The `mobile:` comment now says that the card title is `display`.
+
+**Removed as unused:**
+- `api:` (`tag`, `list`, `get`, …): nothing read it. The feature files import the generated hooks by name.
+- `list.rowClick: detail`: only one behaviour existed, and nothing branched on it.
+- `list.search: q`: `listState` and `SearchInput` always use `q`, and only one search box exists.
+- `mobile: primary | secondary | hidden` became an optional `mobile: subtitle`. Cards are titled by `display` and
+  the table links through the first column, so `primary` only picked the link column and `hidden` was the default.
+
+**Still redundant (kept, because removing it needs code that reads the contract at runtime):**
+- `format: date` and `input: date` repeat `format: date` from the contract.
+- `input: select` repeats the contract enum. Only the i18n enum name (`enum: Gender`) is new information.
+
+**Missing (needed by the next resource, or hard-coded today):**
+- ~~Read-only fields~~: done in 9b (`form.readOnly`, `formats`). **Create-only fields** are still missing.
+- ~~Default values for new records~~: done in 9a, from the contract `default` through the generated Zod schema.
+- ~~Input types beyond text, date and select~~: number, textarea and checkbox done in 9b; an email keyboard
+  (`type=email`) is still missing.
+- **A searchable-fields hint** for the search placeholder. The API decides what `q` matches.
+- **The app name.** "Person UI" is in `index.html` and `common.appName`/`documentTitle`, not in the manifest.
+- ~~Relations between resources~~: done in 9b (`input/format: relation`, relation filters, `detail.related`).
+  Sorting by a relation column is not offered: the contract does not document a sort key for it.
