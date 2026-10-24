@@ -174,6 +174,8 @@ test.describe('books as writer', () => {
 
     await page.goto(`/authors/${authorId}`)
     await expect(page.getByRole('heading', { level: 2, name: 'Books (2)' })).toBeVisible()
+    // Every row is this author's book, so the author's name is not repeated on the rows.
+    await expect(page.getByRole('link', { name: new RegExp(`${tag} first`) })).not.toContainText(`Rae ${tag}`)
     await page.getByRole('link', { name: /^Show all/ }).click()
     await expectListParams(page, { authorId: String(authorId) })
     await expect(page.getByRole('link', { name: new RegExp(`${tag} first`) }).first()).toBeVisible()

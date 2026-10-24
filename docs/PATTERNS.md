@@ -206,10 +206,9 @@ Known gaps, left as is:
 - a server `past` error is cleared by a client-side re-validation until the next save;
 - the API reports birth-date errors before duplicate-email errors, so the user sees them one save at a time.
 
-- **Open from the Library build:**
-  - the related list on an author's page repeats the author's name on every book: it shows the related resource's
-    `mobile: subtitle` columns, including the relation column that points back to the record being shown
-    (`RelatedList.tsx`); it could skip a relation column whose `resource` is the current resource.
+- **Fixed after the Library build:** the related list on an author's page repeated the author's name on every book.
+  `relatedSubtitleFields` (`components/app/relatedFields.ts`) now leaves out a relation column that points back to the
+  record being shown; the same fix is in `crud-ui-blueprint`.
 - **E2E label collision (Library build):** a relation input labelled "Author" and its picker's search box, labelled
   with the related resource's title "Authors", both match `getByRole('combobox', { name: 'Author' })` while the picker
   dialog is open or closing. Wait for `getByRole('dialog')` to be hidden before asserting the input (books.spec.ts).
