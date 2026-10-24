@@ -1,0 +1,14 @@
+{
+  "title": "Authors",
+  "newTitle": "New author",
+  "editTitle": "Edit {{name}}",
+  "empty": "No authors yet.",
+  "fields": {
+    "firstName": "First name",
+    "lastName": "Last name",
+    "birthDate": "Date of birth",
+    "email": "Email",
+    "createdAt": "Created",
+    "updatedAt": "Last changed"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "title": "Autorzy",
+  "newTitle": "Nowy autor",
+  "editTitle": "Edycja: {{name}}",
+  "empty": "Nie ma jeszcze żadnych autorów.",
+  "fields": {
+    "firstName": "Imię",
+    "lastName": "Nazwisko",
+    "birthDate": "Data urodzenia",
+    "email": "E-mail",
+    "createdAt": "Utworzono",
+    "updatedAt": "Ostatnia zmiana"
+  }
+}

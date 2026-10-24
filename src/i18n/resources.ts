@@ -1,15 +1,19 @@
 // One file per top-level key: common.json -> `common.*`, enums.json -> `enums.*`,
 // <resource>.json -> `<resource>.*`. A new language: src/locales/<lang>/ plus one entry here, then list it in
 // ui-manifest.yaml `app.languages`.
+import enAuthors from '@/locales/en/authors.json'
+import enBooks from '@/locales/en/books.json'
 import enCommon from '@/locales/en/common.json'
 import enEnums from '@/locales/en/enums.json'
+import plAuthors from '@/locales/pl/authors.json'
+import plBooks from '@/locales/pl/books.json'
 import plCommon from '@/locales/pl/common.json'
 import plEnums from '@/locales/pl/enums.json'
 import { app } from '@/manifest'
 
 export const resources = {
-  en: { translation: { common: enCommon, enums: enEnums } },
-  pl: { translation: { common: plCommon, enums: plEnums } },
+  en: { translation: { common: enCommon, enums: enEnums, authors: enAuthors, books: enBooks } },
+  pl: { translation: { common: plCommon, enums: plEnums, authors: plAuthors, books: plBooks } },
 } as const
 
 export type Language = keyof typeof resources

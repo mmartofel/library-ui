@@ -1,22 +1,20 @@
-# CRUD UI blueprint
+# Library UI
 
-A GitHub template for a CRUD web UI on top of any REST API that follows [docs/API-CONTRACT.md](docs/API-CONTRACT.md).
-You describe each screen in `ui-manifest.yaml`; Claude Code builds it with the skills in `.claude/`, the same way
-every time, from the API's OpenAPI contract. It was extracted from Person UI
-([`spring-person-ui-claude`](https://github.com/mmartofel/spring-person-ui-claude)), whose two resources are kept as
-reference examples in `.claude/skills/crud-resource/references/examples/`.
-
-What you get without writing a screen:
-- sign-in with OIDC (Keycloak; Authorization Code + PKCE), roles from the token, actions hidden by role;
-- a responsive shell (sidebar from `lg`, sheet menu below), light/dark theme, languages from the manifest (PL and EN
-  included);
-- lists with search, sorting, paging and filters kept in the URL, table from `md` and cards below;
-- detail pages, create/edit forms validated with the contract's Zod schemas, server field errors on the fields,
-  stale-version reload, unsaved-changes guard, delete with confirmation, relations between resources;
-- unit tests (Vitest) for all of that, e2e tests (Playwright) for the shell, CircleCI.
+Web UI for [`library-api`](https://github.com/mmartofel/library-api): authors and the books they wrote, with sign-in
+through Keycloak (realm `library`). Readers (`library-viewer`) browse; librarians (`library-editor`) also create, edit
+and delete. Built from the [`crud-ui-blueprint`](https://github.com/mmartofel/crud-ui-blueprint) template: every screen
+comes from the API's OpenAPI contract (`contract/openapi.json`) and the decisions in `ui-manifest.yaml`.
 
 Stack: Vite, React, TypeScript (strict), React Router, Tailwind CSS v4, shadcn/ui, TanStack Query and Table, React
 Hook Form + Zod, orval, i18next, Vitest + Testing Library, Playwright.
+
+## Run locally
+```bash
+# in ../library-api: PostgreSQL, Keycloak and the API on 8081 (see its README, "Run locally")
+cp .env.example .env.local   # values: library-api README, "Connect a UI"
+npm install
+npm run dev                  # http://localhost:5173; sign in as editor/editor or viewer/viewer
+```
 
 ## Prerequisites
 - Node.js 24+ and npm 11+, [Claude Code](https://claude.com/claude-code), the GitHub CLI (`gh`).

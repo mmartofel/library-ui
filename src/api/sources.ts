@@ -1,5 +1,7 @@
 // The generated list/get functions of each resource, by manifest key, for generic components that read another
 // resource: relation inputs and filters, embedded links and related lists. One line per resource.
+import { getAuthor, getListAuthorsQueryKey, listAuthors } from '@/api/generated/endpoints/authors/authors'
+import { getBook, getListBooksQueryKey, listBooks } from '@/api/generated/endpoints/books/books'
 import type { ResourceKey } from '@/manifest'
 
 /** A record as generic code sees it: an id and fields read through the manifest. */
@@ -15,7 +17,10 @@ export interface ResourceSource {
 
 // One line per resource, e.g. (imports from '@/api/generated/endpoints/orders/orders'):
 //   orders: { list: listOrders, get: getOrder, listKey: getListOrdersQueryKey },
-export const sources: Record<ResourceKey, ResourceSource> = {}
+export const sources: Record<ResourceKey, ResourceSource> = {
+  authors: { list: listAuthors, get: getAuthor, listKey: getListAuthorsQueryKey },
+  books: { list: listBooks, get: getBook, listKey: getListBooksQueryKey },
+}
 
 /** The registered source of a resource; a resource used in a relation or `detail.related` must be in `sources`. */
 export function sourceOf(resource: ResourceKey): ResourceSource {

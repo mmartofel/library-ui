@@ -1,0 +1,19 @@
+{
+  "title": "Książki",
+  "newTitle": "Nowa książka",
+  "editTitle": "Edycja: {{name}}",
+  "empty": "Nie ma jeszcze żadnych książek.",
+  "fields": {
+    "title": "Tytuł",
+    "author": "Autor",
+    "authorId": "Autor",
+    "isbn": "ISBN",
+    "publishedOn": "Data wydania",
+    "pages": "Liczba stron",
+    "createdAt": "Utworzono",
+    "updatedAt": "Ostatnia zmiana"
+  },
+  "filters": {
+    "authorId": "Autor"
+  }
+}

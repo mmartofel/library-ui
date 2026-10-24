@@ -134,6 +134,10 @@ Everything else is generic and driven by the manifest. These are the only person
   - `src/router.tsx`: lazy routes per feature.
 - **Locale files** `persons.json` and the `Gender` enum labels.
 
+**Library UI (`library-api` 1.0.0, Authors and Books):** `src/features/authors/*` and `src/features/books/*` are
+347 lines each, a rename of the tasks example minus its enum wiring (no enums in this API). No generic code changed;
+the manifest covered both resources.
+
 ## 3. Problems met and how they were solved
 
 | Stage | Problem | Fix |
@@ -201,6 +205,14 @@ Known gaps, left as is:
 - user-menu labels are not read by screen readers;
 - a server `past` error is cleared by a client-side re-validation until the next save;
 - the API reports birth-date errors before duplicate-email errors, so the user sees them one save at a time.
+
+- **Open from the Library build:**
+  - the related list on an author's page repeats the author's name on every book: it shows the related resource's
+    `mobile: subtitle` columns, including the relation column that points back to the record being shown
+    (`RelatedList.tsx`); it could skip a relation column whose `resource` is the current resource.
+- **E2E label collision (Library build):** a relation input labelled "Author" and its picker's search box, labelled
+  with the related resource's title "Authors", both match `getByRole('combobox', { name: 'Author' })` while the picker
+  dialog is open or closing. Wait for `getByRole('dialog')` to be hidden before asserting the input (books.spec.ts).
 
 ## 4. `ui-manifest.yaml`: what was missing, what is unused
 

@@ -5,10 +5,90 @@
 
 app:
   # Shown in the header, the browser tab (<title>) and every page title.
-  name: CRUD UI
+  name: Library
   # Languages offered by the switcher; the first one is the default and the fallback.
   # Each needs src/locales/<lang>/ and a line in src/i18n/resources.ts.
   languages: [pl, en]
 
 # One entry per resource, added by the crud-resource skill (crud-ui-init drafts them all for a new project).
-resources: {}
+resources:
+  authors:
+    route: /authors
+    nav:
+      icon: user-pen
+      order: 1
+    display: "{firstName} {lastName}"
+    permissions:
+      read: [library-viewer, library-editor]
+      write: [library-editor]
+
+    list:
+      defaultSort: lastName,asc
+      pageSize: 20
+      pageSizes: [10, 20, 50]
+      columns:
+        - { field: lastName,  sortable: true }
+        - { field: firstName, sortable: true }
+        - { field: email,     sortable: true, mobile: subtitle }
+        - { field: birthDate, sortable: true, format: date, mobile: subtitle }
+
+    detail:
+      fields: [firstName, lastName, birthDate, email, createdAt, updatedAt]
+      related:
+        - { resource: books, filter: authorId, limit: 5 }
+
+    form:
+      groups:
+        - [firstName, lastName]
+        - [birthDate, email]
+      fields:
+        birthDate: { input: date }
+      readOnly: [createdAt, updatedAt]
+
+    formats:
+      createdAt: dateTime
+      updatedAt: dateTime
+
+  books:
+    route: /books
+    nav:
+      icon: book-open
+      order: 2
+    display: "{title}"
+    permissions:
+      read: [library-viewer, library-editor]
+      write: [library-editor]
+
+    list:
+      defaultSort: title,asc
+      pageSize: 20
+      pageSizes: [10, 20, 50]
+      # Ordered by importance: ISBN and pages may scroll out of view at 768 px.
+      columns:
+        - { field: title,       sortable: true }
+        - { field: author,      format: relation, resource: authors, mobile: subtitle }
+        - { field: publishedOn, sortable: true, format: date, mobile: subtitle }
+        - { field: isbn,        sortable: true }
+        - { field: pages,       sortable: true }
+      filters:
+        - { param: authorId, input: relation, resource: authors }
+
+    detail:
+      fields: [title, author, isbn, publishedOn, pages, createdAt, updatedAt]
+
+    form:
+      groups:
+        - [title]
+        - [authorId]
+        - [isbn, publishedOn]
+        - [pages]
+      fields:
+        # required by the API: no empty option
+        authorId:    { input: relation, resource: authors, from: author }
+        publishedOn: { input: date }
+        pages:       { input: number }
+      readOnly: [createdAt, updatedAt]
+
+    formats:
+      createdAt: dateTime
+      updatedAt: dateTime

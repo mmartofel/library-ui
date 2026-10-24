@@ -78,7 +78,10 @@
   },
   "notifications": "Powiadomienia",
   "documentTitle": "{{page}} – {{app}}",
-  "roles": {},
+  "roles": {
+    "library-viewer": "Czytelnik",
+    "library-editor": "Bibliotekarz"
+  },
   "list": {
     "search": "Szukaj",
     "searchPlaceholder": "Szukaj…",

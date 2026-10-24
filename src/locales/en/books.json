@@ -1,0 +1,19 @@
+{
+  "title": "Books",
+  "newTitle": "New book",
+  "editTitle": "Edit {{name}}",
+  "empty": "No books yet.",
+  "fields": {
+    "title": "Title",
+    "author": "Author",
+    "authorId": "Author",
+    "isbn": "ISBN",
+    "publishedOn": "Publication date",
+    "pages": "Pages",
+    "createdAt": "Created",
+    "updatedAt": "Last changed"
+  },
+  "filters": {
+    "authorId": "Author"
+  }
+}

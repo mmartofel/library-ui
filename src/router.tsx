@@ -5,6 +5,8 @@ import { AppShell } from '@/components/app/AppShell'
 import { HomeRedirect } from '@/components/app/HomeRedirect'
 import { NotFoundPage } from '@/components/app/NotFoundPage'
 import { RouteErrorPage } from '@/components/app/RouteErrorPage'
+import { authorsRoutes } from '@/features/authors/routes'
+import { booksRoutes } from '@/features/books/routes'
 
 // Data mode (createBrowserRouter) so forms can block navigation with unsaved changes (useBlocker).
 export const router = createBrowserRouter([
@@ -18,7 +20,8 @@ export const router = createBrowserRouter([
     hydrateFallbackElement: <AppLoading />,
     children: [
       { index: true, element: <HomeRedirect /> },
-      // Resource routes go here, one spread per resource (e.g. ...ordersRoutes), before the `*` route.
+      ...authorsRoutes,
+      ...booksRoutes,
       { path: '*', element: <NotFoundPage /> },
     ],
   },

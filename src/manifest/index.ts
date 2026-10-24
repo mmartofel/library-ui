@@ -90,7 +90,7 @@ export interface ResourceManifest {
  * Resource keys; each one is also the i18n namespace key (`<resource>.title`). No resources yet: the first one
  * replaces `never` with its key (`'orders'`), later ones extend the union (`'orders' | 'customers'`).
  */
-export type ResourceKey = never
+export type ResourceKey = 'authors' | 'books'
 
 interface AppManifest {
   /** Shown in the header, `<title>` and every page title. */
